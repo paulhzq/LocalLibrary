@@ -105,3 +105,23 @@ def renew_book_librarian(request, pk):
         form = RenewBookForm(initial={'renewal_date': proposed_renewal_date,})
 
     return render(request, 'catalog/book_renew_librarian.html', {'form': form, 'bookinst':book_inst})
+
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
+from .models import Author
+
+class AuthorCreate(PermissionRequiredMixin,CreateView):
+    model = Author
+    permission_required = ('catalog.can_mark_returned')
+    fields = '__all__'
+    initial={'date_of_death':'12/10/2016',}
+
+class AuthorUpdate(PermissionRequiredMixin,UpdateView):
+    model = Author
+    permission_required = ('catalog.can_mark_returned')
+    fields = ['first_name','last_name','date_of_birth','date_of_death']
+
+class AuthorDelete(PermissionRequiredMixin,DeleteView):
+    model = Author
+    permission_required = ('catalog.can_mark_returned')
+    success_url = reverse_lazy('authors')
